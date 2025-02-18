@@ -10,14 +10,25 @@ public class BoughtMakeupExportDTO {
     @Nullable
     private ShadeDTO shade;
 
-    public BoughtMakeupExportDTO(MakeupExportDTO makeup, ShadeDTO shade) {
+    private int quantity;
+
+    public BoughtMakeupExportDTO(MakeupExportDTO makeup, @Nullable ShadeDTO shade, int quantity) {
         this.makeup = makeup;
         this.shade = shade;
+        this.quantity = quantity;
     }
 
     public BoughtMakeupExportDTO() {
     }
 
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 
     public void setMakeup(MakeupExportDTO makeup) {
         this.makeup = makeup;

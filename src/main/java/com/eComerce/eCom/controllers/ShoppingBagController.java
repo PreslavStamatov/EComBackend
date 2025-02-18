@@ -11,6 +11,7 @@ import com.eComerce.eCom.repositories.BoughtMakeupRepositorie;
 import com.eComerce.eCom.repositories.MakeupRepository;
 import com.eComerce.eCom.repositories.ShadeRepository;
 import com.eComerce.eCom.repositories.ShoppingBagRepository;
+import com.eComerce.eCom.services.ShoppingBagService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,16 +37,20 @@ public class ShoppingBagController {
     BoughtMakeupRepositorie boughtMakeupRepositorie;
 
     MakeupRepository makeupRepositorie;
+
+    ShoppingBagService shoppingBagService;
+
     @Autowired
     ModelMapper modelMapper;
 
-    public ShoppingBagController(ShoppingBagRepository shoppingBagRepositorie, ShadeRepository shadeRepositorie, BoughtMakeupRepositorie boughtMakeupRepositorie, MakeupRepository makeupRepositorie) {
+    public ShoppingBagController(ShoppingBagRepository shoppingBagRepositorie, ShoppingBagService shoppingBagService, ShadeRepository shadeRepositorie, BoughtMakeupRepositorie boughtMakeupRepositorie, MakeupRepository makeupRepositorie) {
         this.shoppingBagRepositorie = shoppingBagRepositorie;
         this.shadeRepositorie = shadeRepositorie;
         this.boughtMakeupRepositorie = boughtMakeupRepositorie;
         this.modelMapper = new ModelMapper();
         this.modelMapper.createTypeMap(Shade.class, ShadeDTO.class);
         this.makeupRepositorie = makeupRepositorie;
+        this.shoppingBagService = shoppingBagService;
     }
 
     @PostMapping("/addToBag")
@@ -68,6 +73,13 @@ public class ShoppingBagController {
         shoppingBagRepositorie.saveAndFlush(shoppingBag);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Product added successfully");
+    }
+
+    @PostMapping("/removeFromBag")
+    public ResponseEntity<String> removeProductFromBag(@RequestBody BoughtMakeupExportDTO boughtMakeupExportDTO) {
+        shoppingBagService.removeProductFromBag(boughtMakeupExportDTO);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body("Product removed successfully");
     }
 
     @GetMapping("/fetchFromBag")
